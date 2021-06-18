@@ -10,9 +10,11 @@ use Yii;
  * @property int $id
  * @property string $nombre
  * @property string $password
- * @property string $auth_key
- * @property string $telefono
- * @property string $poblacion
+ * @property string|null $auth_key
+ * @property string|null $telefono
+ * @property string|null $poblacion
+ *
+ * @property Pedidos[] $pedidos
  */
 class Usuarios extends \yii\db\ActiveRecord
 {
@@ -46,8 +48,52 @@ class Usuarios extends \yii\db\ActiveRecord
             'nombre' => 'Nombre',
             'password' => 'Password',
             'auth_key' => 'Auth Key',
-            'telefono' => 'Teléfono',
-            'poblacion' => 'Población',
+            'telefono' => 'Telefono',
+            'poblacion' => 'Poblacion',
         ];
+    }
+
+    /**
+     * Gets query for [[Pedidos]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPedidos()
+    {
+        return $this->hasMany(Pedidos::class, ['usuario_id' => 'id'])
+            ->inverseOf('usuario');
+    }
+
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+    
+    }
+
+    public function validateAuthKey($authKey)
+    {
+    
+    }
+
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword(
+            $password,
+            $this->password
+        );
     }
 }
